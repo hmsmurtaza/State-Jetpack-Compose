@@ -10,10 +10,15 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.statejetpackcompose.ui.theme.StateJetpackComposeTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +28,8 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     Greeting("Android")
-                    HelloContent()
+//                    HelloContent()
+                    HelloScreen()
                 }
             }
         }
@@ -44,15 +50,26 @@ fun DefaultPreview() {
 }
 
 @Composable
-fun HelloContent() {
+fun HelloScreen() {
+    var name by rememberSaveable { mutableStateOf("") }
+
+    HelloContent(name = name, oneNameChange = { name = it })
+}
+
+@Composable
+fun HelloContent(name: String, oneNameChange: (String) -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
+//        var name by remember { mutableStateOf("") }
+//        name = valueSaveable
+
         Text(
-            text = "Hello!",
+            text = "Hello, $name!",
             modifier = Modifier.padding(bottom = 8.dp),
             style = MaterialTheme.typography.h5
         )
-        OutlinedTextField(value = "",
-            onValueChange = { },
+        OutlinedTextField(
+            value = name,
+            onValueChange = oneNameChange,
             label = { Text(text = "Name") }
         )
     }
